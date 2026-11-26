@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10110f">
+  <meta name="description" content="Division — play browser games.">
+  <title>Division — Browser Games</title>
+  <link rel="icon" href="assets/division-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Division home">
+      <span class="brand-mark"><span>÷</span></span>
+      <span>DIVISION</span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a class="active" href="#games">Discover</a>
+      <a href="#categories">Categories</a>
+      <a href="#recent">Recently played</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="search-toggle" aria-label="Search games">⌕</button>
+      <button class="profile-btn" id="account-btn">Sign in <span>↗</span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="live-dot"></span> YOUR NEXT GAME IS HERE</div>
+        <h1>Take a break.<br><span>Enter Division.</span></h1>
+        <p>A world of browser games. No downloads, just play.</p>
+        <a class="primary-btn" href="#games">Explore games <span>→</span></a>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="art-grid"></div>
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="hero-symbol">÷</div>
+        <div class="art-tag tag-top">PLAY YOUR WAY</div>
+        <div class="art-tag tag-bottom">DIVISION / 01</div>
+      </div>
+    </section>
+
+    <section class="quick-stats" aria-label="Division highlights">
+      <div><strong>01</strong><span>Find your game</span></div>
+      <div><strong>02</strong><span>Jump straight in</span></div>
+      <div><strong>∞</strong><span>Play again</span></div>
+    </section>
+
+    <section class="section" id="games">
+      <div class="section-heading">
+        <div><div class="eyebrow">THE ARCADE</div><h2>Find your <span>next favorite.</span></h2></div>
+        <button class="text-btn" id="view-all">View all <span>→</span></button>
+      </div>
+      <div class="search-panel" id="search-panel" hidden>
+        <input id="game-search" type="search" placeholder="Search games..." autocomplete="off" aria-label="Search games">
+        <button id="close-search" aria-label="Close search">×</button>
+      </div>
+      <div class="filters" id="categories">
+        <button class="filter active" data-category="all">All games</button>
+        <button class="filter" data-category="action">Action</button>
+        <button class="filter" data-category="driving">Driving</button>
+        <button class="filter" data-category="shooting">Shooting</button>
+        <button class="filter" data-category="adventure">Adventure</button>
+        <button class="filter" data-category="racing">Racing</button>
+        <button class="filter" data-category="simulation">Simulation</button>
+        <button class="filter" data-category="multiplayer">Multiplayer</button>
+      </div>
+      <div class="game-grid" id="game-grid">
+        <div class="empty-state"><div class="empty-icon">÷</div><h3>Games are on the way</h3><p>The arcade is being prepared. Check back soon.</p></div>
+      </div>
+    </section>
+
+    <section class="recent-section" id="recent">
+      <div><div class="eyebrow">YOUR ACTIVITY</div><h2>Pick up where <span>you left off.</span></h2></div>
+      <p id="recent-message">Your recently played games will appear here.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a class="brand" href="#"><span class="brand-mark"><span>÷</span></span><span>DIVISION</span></a>
+    <p>Find your game. Own your break.</p>
+    <span class="footer-note">© <span id="year"></span> DIVISION</span>
+  </footer>
+
+  <dialog class="account-dialog" id="account-dialog">
+    <button class="dialog-close" id="dialog-close" aria-label="Close">×</button>
+    <div class="brand dialog-brand"><span class="brand-mark"><span>÷</span></span><span>DIVISION</span></div>
+    <div class="eyebrow">PLAYER ACCOUNT</div>
+    <h2>Welcome to <span>Division.</span></h2>
+    <p>Player accounts are coming soon. You can explore the arcade without signing in.</p>
+    <button class="primary-btn" id="dialog-ok">Got it <span>→</span></button>
+  </dialog>
+
+  <script src="assets/script.js"></script>
+</body>
+</html>
