@@ -350,7 +350,7 @@ async function loadProfile(){
  const {data:f}=await supabase.from("favorites").select("game_id").eq("user_id",user.id);const {data:l}=await supabase.from("likes").select("game_id").eq("user_id",user.id);const {data:ph}=await supabase.from("play_history").select("game_id,played_at").eq("user_id",user.id).order("played_at",{ascending:false});
  setCount("Favourites",f?.length||0);setCount("Liked Games",l?.length||0);setCount("Played",ph?.length||0);
  const ids=[...(f||[]).map(x=>x.game_id),...(l||[]).map(x=>x.game_id),...(ph||[]).map(x=>x.game_id)];
- const unique=[...new Set(ids)];const {data:gs}=unique.length?await supabase.from("games").select("*").in("id",unique):{data:[]};games=gs||[];
+ const unique=[...new Set(ids)];const {data:gs}=unique.length?await supabase.from("games").select("*").in("id",unique):{data:[]};games=(gs||[]).map(g=>({...g,_fav:(f||[]).some(x=>x.game_id===g.id),_liked:(l||[]).some(x=>x.game_id===g.id),_recent:(ph||[]).some(x=>x.game_id===g.id)}));
  renderTab();
 }
 function renderTab(){
