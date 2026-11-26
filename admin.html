@@ -319,7 +319,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
 <div id="adminNotice" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] hidden max-w-[90vw] rounded-full bg-navy-ink text-white px-5 py-3 shadow-xl font-body text-body-sm"></div>
 <script type="module">
 import { supabase } from "./assets/js/supabase.js";
-const ADMIN_EMAIL="admin.division.games@gmail.com";
+const ADMIN_EMAIL="admin.divison.games@gmail.com";
 const $=id=>document.getElementById(id);
 let games=[],profiles=[],comments=[],likes=[],activeUser=null;
 const escapeHTML=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
