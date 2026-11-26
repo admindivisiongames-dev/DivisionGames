@@ -242,7 +242,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
           </div>
           <a href="profile.html" class="px-3.5 py-1.5 rounded-full bg-section-yellow/70 text-navy-ink font-label text-label-sm hover:bg-section-yellow">Switch Account</a>
         </div>
-        <textarea rows="3" placeholder="Share a tip, high score, or review for Neon Drift Turbo..." aria-label="Write a comment" class="w-full p-4 rounded-lg bg-light-surface-container-low border border-light-outline-variant/60 text-navy-ink font-body text-body-md placeholder:text-light-outline focus:bg-light-surface-container-lowest focus:border-light-primary focus:ring-2 focus:ring-light-primary/20 outline-none"></textarea>
+        <textarea id="newComment" rows="3" placeholder="Share a tip, high score, or review for this game..." aria-label="Write a comment" class="w-full p-4 rounded-lg bg-light-surface-container-low border border-light-outline-variant/60 text-navy-ink font-body text-body-md placeholder:text-light-outline focus:bg-light-surface-container-lowest focus:border-light-primary focus:ring-2 focus:ring-light-primary/20 outline-none"></textarea>
         <div class="flex items-center justify-between gap-4">
           <span data-design-text-token="body-sm" class="font-body text-body-sm text-light-on-surface-variant">Login required to like or comment.</span>
           <button type="button" data-component-id="button-primary" data-component-type="button" data-component-variant="primary" class="px-6 py-2.5 rounded-full bg-light-primary text-light-on-primary shadow-md hover:bg-light-on-primary-container font-label text-label-lg">
@@ -343,4 +343,52 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
 
 
 
+
+<script type="module">
+import {supabase} from "./assets/js/supabase.js";
+const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const params=new URLSearchParams(location.search);let game=null,user=null,comments=[],profiles=[],liked=false,likeCount=0;
+function toast(msg){let n=$("communityNotice");if(!n){n=document.createElement("div");n.id="communityNotice";n.className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 rounded-full bg-navy-ink text-white px-5 py-3 shadow-xl font-body text-body-sm";document.body.append(n);}n.textContent=msg;setTimeout(()=>n.remove(),3500);}
+async function load(){
+ const {data:{user:u}}=await supabase.auth.getUser();user=u;
+ let q=supabase.from("games").select("*").eq("published",true);const id=params.get("id");if(id)q=q.eq("id",id);else q=q.order("created_at",{ascending:false}).limit(1);
+ const {data:g,error}=await q.maybeSingle();if(error)throw error;game=g;if(!game){document.querySelector("main").innerHTML='<section class="rounded-xl bg-light-surface-container-lowest p-8 text-center"><h1 class="font-headline text-headline-lg text-navy-ink">No game discussions yet</h1><p class="mt-3 font-body text-body-md text-light-on-surface-variant">Open a game to start its community discussion.</p><a href="index.html" class="inline-block mt-5 px-5 py-3 rounded-full bg-light-primary text-white">Browse games</a></section>';return;}
+ document.title="DIVISION — "+game.title+" Community";
+ const h=document.querySelector("main h1");if(h)h.textContent=game.title+" — Community";
+ const img=document.querySelector("main img");if(img&&game.image_url)img.src=game.image_url;
+ const back=document.querySelector('main a[href="game.html"]');if(back){back.href="game.html?id="+encodeURIComponent(game.id);const sp=back.querySelector("span:last-child");if(sp)sp.textContent="Back to "+game.title;}
+ const likeBtn=[...document.querySelectorAll("main button")].find(b=>b.textContent.includes("Liked ("));if(likeBtn)likeBtn.id="communityLikeButton";
+ const composer=document.querySelector("main textarea");if(composer)composer.placeholder="Share a tip, high score, or review for "+game.title+"…";
+ const composerSection=composer?.closest("section");if(composerSection){const p=composerSection.querySelector("p");if(p)p.textContent=user?"Signed in · Comments appear immediately":"Sign in to join the discussion";const name=composerSection.querySelector("p.font-title");if(name)name.textContent=user?"Comment as "+(user.user_metadata?.username||user.email?.split("@")[0]||"Player"):"Sign in to comment";}
+ const sections=[...document.querySelectorAll("main section")];const commentsSection=sections.find(s=>s.querySelector("h2")?.textContent.includes("All Comments"));if(commentsSection){commentsSection.innerHTML='<div class="flex items-center justify-between gap-4 border-b border-light-outline-variant/40 pb-4"><h2 class="font-headline text-headline-md text-navy-ink">All Comments (<span id="communityCommentCount">0</span>)</h2><span class="px-3 py-1 rounded-full bg-section-turquoise/60 text-navy-ink font-label text-label-sm">Newest First</span></div><div id="commentsFeed" class="flex flex-col gap-4"><p class="font-body text-body-md text-light-on-surface-variant">Loading discussion…</p></div>';}
+ if(likeBtn)likeBtn.addEventListener("click",toggleGameLike);
+ if($("postComment"))$("postComment").addEventListener("click",postComment);
+ await loadComments();
+}
+async function loadComments(){
+ const {data,error}=await supabase.from("comments").select("id,user_id,body,created_at,parent_id,updated_at").eq("game_id",game.id).order("created_at",{ascending:false}).limit(150);if(error)throw error;comments=data||[];
+ const ids=[...new Set(comments.map(c=>c.user_id))];const {data:p}=ids.length?await supabase.from("profiles").select("id,username,avatar_url,role").in("id",ids):{data:[]};profiles=p||[];
+ const {count}=await supabase.from("comment_likes").select("*",{count:"exact",head:true});const {data:mine}=user?await supabase.from("comment_likes").select("comment_id").eq("user_id",user.id):{data:[]};const mineIds=new Set((mine||[]).map(x=>x.comment_id));
+ $("communityCommentCount").textContent=comments.length.toLocaleString();
+ const feed=$("commentsFeed");if(!feed)return;
+ const byParent=new Map();comments.forEach(c=>{const k=c.parent_id||"root";if(!byParent.has(k))byParent.set(k,[]);byParent.get(k).push(c);});
+ const render=(c,depth=0)=>{const p=profiles.find(x=>x.id===c.user_id),own=user?.id===c.user_id,isAdmin=user&&profiles.find(x=>x.id===user.id)?.role==="admin",likesFor=comments.length;const children=byParent.get(c.id)||[];
+ return '<article class="p-4 rounded-lg bg-light-surface-container-low '+(depth?'ml-5 sm:ml-10 border-l-2 border-section-turquoise':'')+'"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-full bg-section-blue flex items-center justify-center font-display text-title-md shrink-0">'+(p?.avatar_url?'<img src="'+esc(p.avatar_url)+'" alt="" class="w-full h-full object-cover rounded-full">':esc((p?.username||"P")[0].toUpperCase()))+'</div><div class="flex-1 min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="font-title text-title-md text-navy-ink">'+esc(p?.username||"Player")+'</span>'+(own?'<span class="px-2 py-0.5 rounded-full bg-section-turquoise text-navy-ink font-label text-label-sm">You</span>':'')+'<span class="font-mono text-mono-sm text-light-on-surface-variant">'+esc(new Date(c.created_at).toLocaleString())+'</span></div><p class="font-body text-body-md text-light-on-surface mt-2 whitespace-pre-wrap break-words">'+esc(c.body)+'</p><div class="flex flex-wrap items-center gap-3 mt-3"><button data-comment-like="'+c.id+'" class="font-label text-label-sm '+(mineIds.has(c.id)?"text-light-primary":"text-navy-ink")+'">♥ Like</button><button data-reply="'+c.id+'" class="font-label text-label-sm text-navy-ink">↳ Reply</button>'+(own?'<button data-edit-comment="'+c.id+'" class="font-label text-label-sm text-navy-ink">Edit</button>':'')+((own||isAdmin)?'<button data-delete-comment="'+c.id+'" class="font-label text-label-sm text-light-error">Delete</button>':'')+'</div><div id="replybox-'+c.id+'" class="hidden mt-3"><textarea rows="2" data-reply-text="'+c.id+'" placeholder="Write a reply…" class="w-full p-3 rounded-lg bg-light-surface-container-lowest border border-light-outline-variant font-body text-body-md"></textarea><button data-send-reply="'+c.id+'" class="mt-2 px-4 py-2 rounded-full bg-light-primary text-white font-label text-label-sm">Send reply</button></div></div></div>'+children.map(x=>render(x,depth+1)).join("")+'</article>';
+ };
+ feed.innerHTML=(byParent.get("root")||[]).map(c=>render(c)).join("")||'<p class="font-body text-body-md text-light-on-surface-variant py-6">No comments yet. Start the conversation!</p>';
+}
+async function postComment(){if(!user)return location.href="profile.html";const body=$("newComment").value.trim();if(!body)return toast("Write a comment first.");if(body.length>1200)return toast("Comment limit is 1,200 characters.");try{const r=await supabase.from("comments").insert({game_id:game.id,user_id:user.id,body});if(r.error)throw r.error;$("newComment").value="";await loadComments();toast("Comment posted.");}catch(e){toast(e.message||"Could not post comment.");}}
+async function toggleGameLike(){if(!user)return location.href="profile.html";try{const {data}=await supabase.from("likes").select("game_id").eq("user_id",user.id).eq("game_id",game.id).maybeSingle();if(data){const r=await supabase.from("likes").delete().eq("user_id",user.id).eq("game_id",game.id);if(r.error)throw r.error;}else{const r=await supabase.from("likes").insert({user_id:user.id,game_id:game.id});if(r.error)throw r.error;}toast(data?"Like removed.":"Game liked.");}catch(e){toast(e.message||"Could not update like.");}}
+$("commentsFeed")?.addEventListener("click",async e=>{
+ const b=e.target.closest("button");if(!b)return;
+ try{
+ if(b.dataset.reply){if(!user)return location.href="profile.html";$("replybox-"+b.dataset.reply).classList.toggle("hidden");return;}
+ if(b.dataset.sendReply){const id=b.dataset.sendReply,body=document.querySelector('[data-reply-text="'+id+'"]').value.trim();if(!body)return toast("Write a reply first.");const r=await supabase.from("comments").insert({game_id:game.id,user_id:user.id,parent_id:id,body});if(r.error)throw r.error;await loadComments();toast("Reply posted.");return;}
+ if(b.dataset.editComment){const c=comments.find(x=>x.id===b.dataset.editComment);const body=prompt("Edit your comment:",c?.body||"");if(body===null)return;if(!body.trim())return toast("Comment cannot be empty.");const r=await supabase.from("comments").update({body:body.trim(),updated_at:new Date().toISOString()}).eq("id",c.id);if(r.error)throw r.error;await loadComments();toast("Comment updated.");return;}
+ if(b.dataset.deleteComment){if(!confirm("Delete this comment?"))return;const r=await supabase.from("comments").delete().eq("id",b.dataset.deleteComment);if(r.error)throw r.error;await loadComments();toast("Comment deleted.");return;}
+ if(b.dataset.commentLike){if(!user)return location.href="profile.html";const id=b.dataset.commentLike;const {data}=await supabase.from("comment_likes").select("comment_id").eq("user_id",user.id).eq("comment_id",id).maybeSingle();const r=data?await supabase.from("comment_likes").delete().eq("user_id",user.id).eq("comment_id",id):await supabase.from("comment_likes").insert({user_id:user.id,comment_id:id});if(r.error)throw r.error;await loadComments();return;}
+ }catch(err){toast(err.message||"That action failed.");}
+});
+(async()=>{try{await load();}catch(e){console.error(e);toast("Could not load community comments.");}})();
+</script>
 </body></html>
