@@ -323,7 +323,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
                 <h2 data-design-text-token="headline-md" class="font-headline text-headline-md text-navy-ink">Player Comments</h2>
                 <span class="px-3 py-0.5 rounded-full bg-section-purple text-navy-ink font-mono text-mono-sm tabular-nums">342</span>
               </div>
-              <a href="community.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-light-primary text-light-on-primary font-label text-label-md hover:bg-light-on-primary-container">
+              <a id="openCommunity" href="community.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-light-primary text-light-on-primary font-label text-label-md hover:bg-light-on-primary-container">
                 <span data-design-text-token="label-md">Open Full Discussion</span>
                 <span class="material-symbols-outlined text-title-md" aria-hidden="true">arrow_forward</span>
               </a>
@@ -413,4 +413,53 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
 
 
 
+
+<script type="module">
+import {supabase} from "./assets/js/supabase.js";
+const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const params=new URLSearchParams(location.search);let game=null,user=null,liked=false,fav=false;
+function notify(t){let n=$("gameNotice");if(!n){n=document.createElement("div");n.id="gameNotice";n.className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 rounded-full bg-navy-ink text-white px-5 py-3 shadow-xl font-body text-body-sm";document.body.append(n);}n.textContent=t;n.hidden=false;setTimeout(()=>n.hidden=true,3200);}
+function countText(label,n){const el=[...document.querySelectorAll("main span,main p")].find(x=>x.textContent.trim().includes(label));if(el)el.textContent=label==="Likes"?n.toLocaleString()+" Likes":n.toLocaleString()+" Comments";}
+async function getUser(){const {data:{user:u}}=await supabase.auth.getUser();user=u;}
+async function loadGame(){
+ const id=params.get("id");
+ let q=supabase.from("games").select("*").eq("published",true);
+ if(id)q=q.eq("id",id);else q=q.order("created_at",{ascending:false}).limit(1);
+ const {data,error}=await q.maybeSingle();if(error)throw error;game=data;
+ if(!game){document.querySelector("main").innerHTML='<section class="max-w-3xl mx-auto rounded-xl bg-light-surface-container-lowest p-8 text-center"><h1 class="font-headline text-headline-lg text-navy-ink">No games published yet</h1><p class="font-body text-body-md text-light-on-surface-variant mt-3">Games added by the Division admin will appear here.</p><a href="index.html" class="inline-block mt-5 px-5 py-3 rounded-full bg-light-primary text-white font-label">Browse games</a></section>';return;}
+ document.title="DIVISION — "+game.title;
+ const main=document.querySelector("main");const h=main.querySelector("h1");if(h)h.textContent=game.title;
+ const breadcrumb=main.querySelector("main span")||[...main.querySelectorAll("span")].find(x=>x.textContent.includes("Home / Racing"));if(breadcrumb)breadcrumb.textContent="Home / "+(game.category||"Games")+" / "+game.title;
+ const title=main.querySelector("h1");const titleSection=title?.closest("section");if(titleSection){const imgs=titleSection.querySelectorAll("img");imgs.forEach(img=>{img.alt=game.title+" cover";if(game.image_url)img.src=game.image_url;});const cat=title.parentElement?.querySelector("span");if(cat)cat.textContent=game.category||"Game";const by=titleSection.querySelector("strong");if(by)by.textContent=game.developer_name||"Division Player";}
+ const about=[...main.querySelectorAll("h2")].find(x=>x.textContent.startsWith("About"));if(about){about.textContent="About "+game.title;const p=about.parentElement.querySelector("p");if(p)p.textContent=game.description||"Play "+game.title+" right in your browser. Enjoy the game and share your thoughts with the Division community.";}
+ const instructions=[...main.querySelectorAll("h3")].find(x=>x.textContent==="How to Play");if(instructions){const ol=instructions.parentElement.querySelector("ol");if(ol)ol.innerHTML=(game.instructions||game.controls||"Use the on-screen controls or keyboard instructions provided by the game.").split(/\n|\r/).filter(Boolean).slice(0,6).map((x,i)=>'<li class="flex items-start gap-2.5"><span class="w-6 h-6 rounded-full '+(i%2?"bg-section-yellow":"bg-section-turquoise")+' text-navy-ink font-label text-label-sm flex items-center justify-center shrink-0">'+(i+1)+'</span><span>'+esc(x)+'</span></li>').join("");}
+ const dev=[...main.querySelectorAll("h2")].find(x=>x.textContent==="Developer Info");if(dev){const section=dev.closest("section");const name=section.querySelector("p");if(name)name.textContent=game.developer_name||"Community developer";const desc=section.querySelectorAll("p")[1];if(desc)desc.textContent="Published on Division";}
+ const frameArea=main.querySelector(".relative.aspect-video");if(frameArea){frameArea.id="gameFrameArea";const img=frameArea.querySelector("img");if(img&&game.image_url)img.src=game.image_url;const play=frameArea.querySelector("button");if(play)play.id="playGameButton";}
+ const likeBtn=[...main.querySelectorAll("button")].find(b=>b.textContent.includes("Likes"));if(likeBtn)likeBtn.id="likeGameButton";
+ const favBtn=main.querySelector('button[aria-label="Save to Favourites"]');if(favBtn)favBtn.id="favoriteGameButton";
+ const fullBtn=main.querySelector('button[aria-label="Fullscreen"]');if(fullBtn)fullBtn.id="fullscreenGameButton";
+ const commentHeading=[...main.querySelectorAll("h2")].find(x=>x.textContent==="Player Comments");if(commentHeading){const sec=commentHeading.closest("section");const feed=sec.querySelector(".flex.flex-col.gap-3");if(feed){feed.id="gameCommentFeed";feed.innerHTML='<p class="font-body text-body-md text-light-on-surface-variant">Loading comments…</p>';}}
+ const community=$("openCommunity");if(community)community.href="community.html?id="+encodeURIComponent(game.id);
+ const {count:likesCount}=await supabase.from("likes").select("*",{count:"exact",head:true}).eq("game_id",game.id);if(likeBtn){const label=likeBtn.querySelector("span:last-child");if(label)label.textContent=(likesCount||0).toLocaleString()+" Likes";}
+ const {count:commentCount}=await supabase.from("comments").select("*",{count:"exact",head:true}).eq("game_id",game.id);if(commentHeading){const count=commentHeading.parentElement.querySelector("span");if(count)count.textContent=(commentCount||0).toLocaleString();}
+ await getUser();if(user){const [l,f]=await Promise.all([supabase.from("likes").select("game_id").eq("user_id",user.id).eq("game_id",game.id).maybeSingle(),supabase.from("favorites").select("game_id").eq("user_id",user.id).eq("game_id",game.id).maybeSingle()]);liked=!!l.data;fav=!!f.data;}
+ if(likeBtn)likeBtn.addEventListener("click",toggleLike);if(favBtn)favBtn.addEventListener("click",toggleFavorite);
+ if(play)play.addEventListener("click",launchGame);if(fullBtn)fullBtn.addEventListener("click",()=>{const frame=$("gameIframe");if(frame?.requestFullscreen)frame.requestFullscreen();else notify("Launch the game first.");});
+ await renderComments();
+}
+async function toggleLike(){if(!user)return location.href="profile.html";try{if(liked){const r=await supabase.from("likes").delete().eq("user_id",user.id).eq("game_id",game.id);if(r.error)throw r.error;liked=false;}else{const r=await supabase.from("likes").insert({user_id:user.id,game_id:game.id});if(r.error)throw r.error;liked=true;}const {count}=await supabase.from("likes").select("*",{count:"exact",head:true}).eq("game_id",game.id);const b=$("likeGameButton"),label=b?.querySelector("span:last-child");if(label)label.textContent=(count||0).toLocaleString()+" Likes";notify(liked?"Added your like.":"Like removed.");}catch(e){notify(e.message||"Could not update like.");}}
+async function toggleFavorite(){if(!user)return location.href="profile.html";try{if(fav){const r=await supabase.from("favorites").delete().eq("user_id",user.id).eq("game_id",game.id);if(r.error)throw r.error;fav=false;}else{const r=await supabase.from("favorites").insert({user_id:user.id,game_id:game.id});if(r.error)throw r.error;fav=true;}const b=$("favoriteGameButton");if(b)b.classList.toggle("bg-section-yellow",fav);notify(fav?"Added to favourites.":"Removed from favourites.");}catch(e){notify(e.message||"Could not update favourite.");}}
+async function launchGame(){
+ if(!game.game_url){notify("This game has no playable URL yet.");return;}
+ let url;try{url=new URL(game.game_url);}catch{notify("Game URL is invalid.");return;}if(!["https:","http:"].includes(url.protocol)){notify("Only web game URLs can be opened.");return;}
+ const area=$("gameFrameArea");if(!area)return;area.innerHTML='<iframe id="gameIframe" src="'+esc(url.href)+'" title="'+esc(game.title)+'" allow="autoplay; fullscreen; gamepad; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" class="absolute inset-0 w-full h-full border-0"></iframe>';
+ try{if(user){await supabase.from("game_plays").insert({game_id:game.id,user_id:user.id});await supabase.from("play_history").upsert({game_id:game.id,user_id:user.id,played_at:new Date().toISOString()});}}catch(e){console.warn("Play tracking unavailable",e);}
+}
+async function renderComments(){
+ const feed=$("gameCommentFeed");if(!feed)return;const {data,error}=await supabase.from("comments").select("id,user_id,body,created_at,parent_id").eq("game_id",game.id).is("parent_id",null).order("created_at",{ascending:false}).limit(8);if(error){feed.innerHTML='<p class="text-body-sm text-light-on-surface-variant">Comments are temporarily unavailable.</p>';return;}
+ const ids=(data||[]).map(c=>c.user_id);const {data:profiles}=ids.length?await supabase.from("profiles").select("id,username,avatar_url").in("id",ids):{data:[]};
+ feed.innerHTML=(data||[]).length?(data||[]).map(c=>{const p=profiles?.find(x=>x.id===c.user_id);return '<article class="p-4 rounded-lg bg-light-surface-container-low flex items-start gap-3"><div class="w-9 h-9 rounded-full bg-section-blue flex items-center justify-center font-display">'+esc((p?.username||"P")[0].toUpperCase())+'</div><div class="flex-1"><p class="font-title text-title-md text-navy-ink">'+esc(p?.username||"Player")+'</p><p class="font-body text-body-md text-light-on-surface mt-1">'+esc(c.body)+'</p><p class="font-body text-body-sm text-light-on-surface-variant mt-2">'+esc(new Date(c.created_at).toLocaleString())+'</p></div></article>';}).join(""):'<p class="font-body text-body-md text-light-on-surface-variant">Be the first to comment on this game.</p>';
+}
+(async()=>{try{await loadGame();}catch(e){console.error(e);notify("Could not load game details.");}})();
+</script>
 </body></html>
