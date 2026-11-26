@@ -184,7 +184,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
         </a>
         <div class="relative flex-1 ml-1">
           <span class="material-symbols-outlined text-title-md text-light-outline absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true">search</span>
-          <input type="search" placeholder="Search 1,200+ instant games..." aria-label="Search games" class="w-full pl-10 pr-4 py-2 rounded-full bg-light-surface-container-low/90 border border-light-outline-variant/50 text-navy-ink font-body text-body-md placeholder:text-light-outline focus:bg-light-surface-container-lowest focus:border-light-primary focus:ring-2 focus:ring-light-primary/20 outline-none">
+          <input id="gameSearchInput" type="search" placeholder="Search games in Division..." aria-label="Search games" class="w-full pl-10 pr-4 py-2 rounded-full bg-light-surface-container-low/90 border border-light-outline-variant/50 text-navy-ink font-body text-body-md placeholder:text-light-outline focus:bg-light-surface-container-lowest focus:border-light-primary focus:ring-2 focus:ring-light-primary/20 outline-none">
         </div>
       </div>
 
@@ -226,105 +226,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
         </div>
 
         <!-- Poki-inspired Colourful Bento Grid (6 cols on desktop) -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 auto-rows-[160px]">
-          <!-- Large 2x2 Featured Tile 1 -->
-          <a href="game.html" data-component-id="card-interactive" data-component-type="card" data-component-variant="interactive" class="group relative col-span-2 row-span-2 rounded-lg overflow-hidden bg-light-surface-container-lowest shadow-lg hover:shadow-xl hover:-translate-y-1.5 transition-transform duration-state-change">
-            <img src="https://lh3.googleusercontent.com/aida/ALJJyrBHJ6VDIYgQ0tAD5N_B6W448MGItwN6y0Au4FkjwXB8egp5rwMNmocroCcb0fJYh2baDrgOsNLdJhzIsmohGTjl43QapjD5xccEYoLoTw8DV1KDzbv9hTwL6JPMB6lIHU1sfZXLNKOy3JHk4Qkidnqj5PS6FW-VD5wNPDGUYE7WJO0EKzlX4ZZXAxArZ6NOLrdEEKCBczmJFI3a5wRf86PzfEc4nxTBlyOHwWo-aTniMGTeop6v3YDEYw" alt="Shadow Blade Duel" class="w-full h-full object-cover">
-            <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-accent-coral text-light-on-primary shadow-sm">
-              <span data-design-text-token="label-sm" class="font-label text-label-sm">FEATURED</span>
-            </div>
-            <div class="absolute inset-x-3 bottom-3 px-4 py-2.5 rounded-lg bg-light-surface-container-lowest/85 backdrop-blur-md shadow-md flex items-center justify-between gap-2">
-              <div>
-                <h2 data-design-text-token="title-lg" class="font-title text-title-lg text-navy-ink">Shadow Blade Duel</h2>
-                <p data-design-text-token="body-sm" class="font-body text-body-sm text-light-on-surface-variant">Action · 2 Player</p>
-              </div>
-              <span class="w-9 h-9 rounded-full bg-navy-ink text-light-surface-container-lowest flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined text-title-md" style="font-variation-settings: &#39;FILL&#39; 1;">play_arrow</span>
-              </span>
-            </div>
-          </a>
-
-          <!-- 1x1 Tile -->
-          <a href="game.html" class="group relative rounded-lg overflow-hidden bg-light-surface-container-lowest shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-transform duration-state-change">
-            <img src="https://lh3.googleusercontent.com/aida/ALJJyrBCBUyrELVtVK97F7hMNNnMosbM3q0AUw-3rcdn2_NRnVd9l9KQJA0H3MebP_-2tqB8f4JnsFk3jzph02JP8XvpAP_xQ-pLtKY-L4tHpDmc1M-VUY2LqbWNi2If5lhB2POpR3RDbWYuzvUk1aeaL3Sq_oyRtVgbZc_34ryKZVu7m8uHvNyIUkWVFx1Iwv_qFxRp6T8EeS0sesLiAEcHEkmB3rfCUViynx-orMMMWMh8m81F5r8KAe7cPpg" alt="Block Miner Quest" class="w-full h-full object-cover">
-            <div class="absolute inset-x-2 bottom-2 px-3 py-1 rounded-full bg-navy-ink/75 backdrop-blur-md text-light-surface-container-lowest opacity-0 group-hover:opacity-100 transition-opacity duration-state-change">
-              <span data-design-text-token="label-sm" class="font-label text-label-sm truncate block">Block Miner Quest</span>
-            </div>
-          </a>
-
-          <!-- 1x1 Tile -->
-          <a href="game.html" class="group relative rounded-lg overflow-hidden bg-light-surface-container-lowest shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-transform duration-state-change">
-            <img src="https://lh3.googleusercontent.com/aida/ALJJyrDXE_YUYZ3m8yLcRJdIbfu-sXdI-CfKAin3TP3MxvCP_S08IBhRxzletqE7yOeeY-UVZmWpl0uM4YmRdwbtFVtqcAKHnqPibZkrMkO3J6jb2_Fqjo7PjhqO5KTionwZ9OkFnLEUckMEK49AP9lEkCnDNm3Yq56fyIlXRU0O57S81sv-1TewJ1k1OJ9Vepcsql0F7L1JgY5MLf8zt9vIlr70vN7xme5GneW724Dr7E0dr4vlb6K0AV0CzoLB" alt="Astro Bounce" class="w-full h-full object-cover">
-            <div class="absolute inset-x-2 bottom-2 px-3 py-1 rounded-full bg-navy-ink/75 backdrop-blur-md text-light-surface-container-lowest opacity-0 group-hover:opacity-100 transition-opacity duration-state-change">
-              <span data-design-text-token="label-sm" class="font-label text-label-sm truncate block">Astro Bounce</span>
-            </div>
-          </a>
-
-          <!-- 1x1 Tile -->
-          <a href="game.html" class="group relative rounded-lg overflow-hidden bg-light-surface-container-lowest shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-transform duration-state-change">
-            <img src="https://lh3.googleusercontent.com/aida/ALJJyrD5Fg9TII3931pk5P7hHrNCAlxfkWm4JROCO2VuEVy1LXftxIt925MjueGnoX3M5B3FR1BnU27EkFHOEQTCmgzdOmXXuKhKBwGpPZqNkX6aH9WkCBFIJXE2Kp4bMN17tX1saBkB4RW4XYGu8nWOaU3EKyhxg-DxsVKo64wRegidGsqVSDN57-HBCsia1BpTFt8NF4wHdmZ-u9xzLB4QUr2TNpPHW15VbTm3vsCCgSiqo7vvRFsgPacpmw" alt="Turbo Sky Kart" class="w-full h-full object-cover">
-            <div class="absolute inset-x-2 bottom-2 px-3 py-1 rounded-full bg-navy-ink/75 backdrop-blur-md text-light-surface-container-lowest opacity-0 group-hover:opacity-100 transition-opacity duration-state-change">
-              <span data-design-text-token="label-sm" class="font-label text-label-sm truncate block">Turbo Sky Kart</span>
-            </div>
-          </a>
-
-          <!-- 1x1 Tile -->
-          <a href="game.html" class="group relative rounded-lg overflow-hidden bg-light-surface-container-lowest shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-transform duration-state-change">
-            <img src="https://lh3.googleusercontent.com/aida/ALJJyrDWDoGSGmxL9_B2udb4SNHjJ6RWnbW2C36mEmU6SrZifSHfrJvWO66MYEJC5mp-XNaskQqAIBPj0uGXh2FAi93RrFK4E5fxnegof5yw9QTTCneT1G9rZj-8irTU1SNde41X7buGgEuGqUvDe0_tIYJ4fRRZSztGwNoPCgpD0c5rbIIeiMdhZSxuRZ9CBoLh5nGtwDrqgsojs6S9mJnkCZWPPuzRdizktc037Rs1st-HQ5rhQzEXzAI" alt="Dino Jungle Dash" class="w-full h-full object-cover">
-            <div class="absolute inset-x-2 bottom-2 px-3 py-1 rounded-full bg-navy-ink/75 backdrop-blur-md text-light-surface-container-lowest opacity-0 group-hover:opacity-100 transition-opacity duration-state-change">
-              <span data-design-text-token="label-sm" class="font-label text-label-sm truncate block">Dino Jungle Dash</span>
-            </div>
-          </a>
-
-          <!-- Large 2x2 Featured Tile 2 (Right Side) -->
-          <a href="game.html" class="group relative col-span-2 row-span-2 rounded-xl overflow-hidden bg-light-surface-container-lowest shadow-lg hover:shadow-xl hover:-translate-y-1.5 transition-transform duration-state-change">
-            <img src="https://lh3.googleusercontent.com/aida/ALJJyrDS92JKm4kmo5yuO8eQhfGiFqNNuUQnireBqcJiLix8r8TZWeCRDPuMK-o9pwj96eQ1UXNxQ7YDm_QdyUGOnmxyDTinuWIvrdgcLMnDLAtSbsvFrlDY7AtOZHo0eO3ktfiD0L5CSwZcPFg5Mo8rMaYSnpAK44Bb0ggVqiWQDydOHmUmnHk1YYnC94ifQJ5QZh51zs80FwNY9kKjrOi0R2SxQG4m20dLn2ZpcPZnblm5bXMznBWJ8__Ngg" alt="Neon Drift Turbo" class="w-full h-full object-cover">
-            <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-light-primary text-light-on-primary shadow-sm">
-              <span data-design-text-token="label-sm" class="font-label text-label-sm">HOT NOW</span>
-            </div>
-            <div class="absolute inset-x-3 bottom-3 px-4 py-2.5 rounded-lg bg-light-surface-container-lowest/85 backdrop-blur-md shadow-md flex items-center justify-between gap-2">
-              <div>
-                <h2 data-design-text-token="title-lg" class="font-title text-title-lg text-navy-ink">Neon Drift Turbo</h2>
-                <p data-design-text-token="body-sm" class="font-body text-body-sm text-light-on-surface-variant">Racing · 14.8K Likes</p>
-              </div>
-              <span class="w-9 h-9 rounded-full bg-navy-ink text-light-surface-container-lowest flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined text-title-md" style="font-variation-settings: &#39;FILL&#39; 1;">play_arrow</span>
-              </span>
-            </div>
-          </a>
-
-          <!-- 1x1 Tile -->
-          <a href="game.html" class="group relative rounded-lg overflow-hidden bg-light-surface-container-lowest shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-transform duration-state-change">
-            <img src="https://lh3.googleusercontent.com/aida/ALJJyrBV6OCikQY1OW1dBcdYwkIq5qRpF0AzirNwfB2eYL24Ns3rZdFP9bW2-o3bAoEhM0dDIEqvr9muFyrBx9S9rpmR0WKFCyGvplz7ViBQeBQNK7BRt2sP2cOKDOOgG43u-SYwJom2SNI7flBHOmQlE6Rk5-u2lfNativM68asPtaaNda24u8tAd8KH1yJGde50kbL3iMxW0kzCza512GrursTZ70R15E3118b-OyHiVe7J0TE8tO8Du-eDNI" alt="Dragon City Taxi" class="w-full h-full object-cover">
-            <div class="absolute inset-x-2 bottom-2 px-3 py-1 rounded-full bg-navy-ink/75 backdrop-blur-md text-light-surface-container-lowest opacity-0 group-hover:opacity-100 transition-opacity duration-state-change">
-              <span data-design-text-token="label-sm" class="font-label text-label-sm truncate block">Dragon City Taxi</span>
-            </div>
-          </a>
-
-          <!-- 1x1 Tile -->
-          <a href="game.html" class="group relative rounded-lg overflow-hidden bg-light-surface-container-lowest shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-transform duration-state-change">
-            <img src="https://lh3.googleusercontent.com/aida/ALJJyrAtYR3de1s44eoW76t9WNxjq5bWcMPtpKVfEeXCqWEeSuSbU7EvAa60WSrdfeDE2SXExJh1ME_OTVeSRdThv07dJvMbwZjleZYArbkNIP25B3BfbWJZRe3CgKgp7_g7zbZPdFRfTWmKYpHEnebjr0zJHIm-bH39qm6E7QyozrY-C_1zE0mFjsYgCJnkpaqamA25w7giu3U5GpyEcch-mx1ZLV7ak3Ly9LQfGphqkaNkOv2VNjIbsM1f77k" alt="Sky Striker Cup" class="w-full h-full object-cover">
-            <div class="absolute inset-x-2 bottom-2 px-3 py-1 rounded-full bg-navy-ink/75 backdrop-blur-md text-light-surface-container-lowest opacity-0 group-hover:opacity-100 transition-opacity duration-state-change">
-              <span data-design-text-token="label-sm" class="font-label text-label-sm truncate block">Sky Striker Cup</span>
-            </div>
-          </a>
-
-          <!-- 1x1 Tile -->
-          <a href="game.html" class="group relative rounded-lg overflow-hidden bg-light-surface-container-lowest shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-transform duration-state-change">
-            <img src="https://lh3.googleusercontent.com/aida/ALJJyrDOIHOd_GrBFL7ql0ok0d_LN5TmPIT8ZUg51frdweDtGCld_nCLOVYRgpaNhXUTs5IKsxIgkM3_Qg17GhDb7OurU47mM_c0mH5iqk727kZmYKig43z5rqBesAvLnAQ01F9WdGM1pkJwEMw6uVpvAlul6jLhJQExel8jOQtn1QyX0hnBR8HHRIlqkX67B5pagL58-JQ-5a6XegjHtzg6RQGicYriaoHvuYcjySWCvzZB1qlJErofsCp9" alt="Ape Canyon Climb" class="w-full h-full object-cover">
-            <div class="absolute inset-x-2 bottom-2 px-3 py-1 rounded-full bg-navy-ink/75 backdrop-blur-md text-light-surface-container-lowest opacity-0 group-hover:opacity-100 transition-opacity duration-state-change">
-              <span data-design-text-token="label-sm" class="font-label text-label-sm truncate block">Ape Canyon Climb</span>
-            </div>
-          </a>
-
-          <!-- 1x1 Tile -->
-          <a href="game.html" class="group relative rounded-lg overflow-hidden bg-light-surface-container-lowest shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-transform duration-state-change">
-            <img src="https://lh3.googleusercontent.com/aida/ALJJyrBHJ6VDIYgQ0tAD5N_B6W448MGItwN6y0Au4FkjwXB8egp5rwMNmocroCcb0fJYh2baDrgOsNLdJhzIsmohGTjl43QapjD5xccEYoLoTw8DV1KDzbv9hTwL6JPMB6lIHU1sfZXLNKOy3JHk4Qkidnqj5PS6FW-VD5wNPDGUYE7WJO0EKzlX4ZZXAxArZ6NOLrdEEKCBczmJFI3a5wRf86PzfEc4nxTBlyOHwWo-aTniMGTeop6v3YDEYw" alt="Neon Arena" class="w-full h-full object-cover">
-            <div class="absolute inset-x-2 bottom-2 px-3 py-1 rounded-full bg-navy-ink/75 backdrop-blur-md text-light-surface-container-lowest opacity-0 group-hover:opacity-100 transition-opacity duration-state-change">
-              <span data-design-text-token="label-sm" class="font-label text-label-sm truncate block">Neon Arena</span>
-            </div>
-          </a>
-        </div>
+        <div id="liveGamesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 auto-rows-[160px]"><p class="col-span-full rounded-xl bg-light-surface-container-lowest p-8 text-center font-body text-body-md text-light-on-surface-variant">Loading published games…</p></div>
       </div>
     </section>
 
@@ -604,5 +506,33 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
   </footer>
 
 
+
+
+<script type="module">
+import { supabase } from "./assets/js/supabase.js";
+const grid=document.getElementById("liveGamesGrid"),search=document.getElementById("gameSearchInput");
+let allGames=[],allLikes=[];
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function render(){
+ const q=(search?.value||"").trim().toLowerCase();
+ const items=allGames.filter(g=>[g.title,g.category,g.description,...(g.tags||[])].join(" ").toLowerCase().includes(q));
+ if(!items.length){grid.innerHTML='<div class="col-span-full rounded-xl bg-light-surface-container-lowest p-8 text-center shadow-sm"><p class="font-title text-title-lg text-navy-ink">No games found</p><p class="font-body text-body-sm text-light-on-surface-variant mt-2">Try another search or check back when more games are published.</p></div>';return;}
+ grid.innerHTML=items.map((g,i)=>{
+ const liked=allLikes.filter(x=>x.game_id===g.id).length;
+ const palette=["bg-section-turquoise","bg-section-yellow","bg-section-purple","bg-section-pink","bg-section-blue"];
+ const art=g.image_url?'<img src="'+esc(g.image_url)+'" alt="'+esc(g.title)+' cover" loading="lazy" class="absolute inset-0 w-full h-full object-cover">':'<div class="absolute inset-0 '+palette[i%palette.length]+' flex items-center justify-center"><span class="font-display text-display-md text-navy-ink">'+esc(g.symbol||"✦")+'</span></div>';
+ return '<a href="game.html?id='+encodeURIComponent(g.id)+'" class="group relative rounded-lg overflow-hidden bg-light-surface-container-lowest shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-transform duration-state-change">'+art+(g.featured?'<span class="absolute top-2 left-2 px-2.5 py-1 rounded-full bg-section-yellow text-navy-ink font-label text-label-sm">FEATURED</span>':'')+'<div class="absolute inset-x-2 bottom-2 px-3 py-2 rounded-lg bg-light-surface-container-lowest/90 backdrop-blur-md shadow-sm"><span class="font-title text-title-md text-navy-ink truncate block">'+esc(g.title)+'</span><span class="font-body text-body-sm text-light-on-surface-variant truncate block">'+esc(g.category||"Game")+' · '+liked.toLocaleString()+' likes</span></div></a>';
+ }).join("");
+}
+async function init(){
+ try{
+  const [g,l]=await Promise.all([supabase.from("games").select("*").eq("published",true).order("featured",{ascending:false}).order("created_at",{ascending:false}),supabase.from("likes").select("game_id")]);
+  if(g.error)throw g.error;if(l.error)throw l.error;
+  allGames=g.data||[];allLikes=l.data||[];render();
+ }catch(err){grid.innerHTML='<div class="col-span-full rounded-xl bg-light-surface-container-lowest p-8 text-center font-body text-body-md text-light-on-surface-variant">Games could not load right now. Please refresh in a moment.</div>';console.error("Division games load failed:",err);}
+}
+search?.addEventListener("input",render);
+init();
+</script>
 
 </body></html>
